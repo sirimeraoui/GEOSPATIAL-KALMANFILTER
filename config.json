@@ -1,0 +1,9 @@
+{
+    "API_HOST": "localhost",
+    "API_PORT": 8080,
+    "DB_HOST": "localhost",
+    "DB_PORT": 25431,
+    "DB_NAME": "postgres",
+    "DB_USER": "postgres",
+    "DB_PASS": "mysecretpassword"
+}
