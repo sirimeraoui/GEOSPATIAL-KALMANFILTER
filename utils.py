@@ -264,47 +264,47 @@ def create_dash_app(df, engine, perform_kalman_filtering):
         Output('traj-plot', 'figure'),
         Input('mmsi-dropdown-traj', 'value')
     )
-    def update_traj_plot(selected_mmsi):
+    def update_graph(selected_mmsi):
         if selected_mmsi is not None:
-                # Fetch trajectory data
-                query = f"SELECT geomproj, t AS timestamp FROM AISInputSample WHERE mmsi = {selected_mmsi} ORDER BY t;"
-                gdf = gpd.read_postgis(query, engine, geom_col='geomproj')
+            # Fetch trajectory data
+            query = f"SELECT geomproj, t AS timestamp FROM AISInputSample WHERE mmsi = {selected_mmsi} ORDER BY t;"
+            gdf = gpd.read_postgis(query, engine, geom_col='geomproj')
 
-                # Call the Kalman filtering function
-                smoothed_coords = perform_kalman_filtering(gdf)
+            # Call the Kalman filtering function
+            smoothed_coords = perform_kalman_filtering(gdf)
 
-                # Prepare data for plotting
-                original_x = gdf.geometry.x
-                original_y = gdf.geometry.y
-                smoothed_x = [coord[0] for coord in smoothed_coords]
-                smoothed_y = [coord[1] for coord in smoothed_coords]
+            # Prepare data for plotting
+            original_x = gdf.geometry.x
+            original_y = gdf.geometry.y
+            smoothed_x = [coord[0] for coord in smoothed_coords]
+            smoothed_y = [coord[1] for coord in smoothed_coords]
 
-                # Plotting the trajectories
-                fig = go.Figure()
-                fig.add_trace(go.Scattergl(x=original_x, y=original_y, mode='lines', name='Original Path'))
-                fig.add_trace(go.Scattergl(x=smoothed_x, y=smoothed_y, mode='lines', name='Smoothed Path'))
-                fig.update_layout(xaxis_title='x-coordinate', yaxis_title='y-coordinate', 
-                                xaxis=dict(
-                                    tickmode='auto',
-                                    tickformat=',',  # This will ensure that numbers are separated by commas but not in scientific notation
-                                ),
-                                yaxis=dict(
-                                    tickmode='auto',
-                                    tickformat=','
-                                ),
-                                margin={'l': 80, 'b': 140, 't': 50, 'r': 10},
-                                font=dict(
-                                    family="Times New Roman",
-                                    size=18,
-                                    color= "black"
-                                ),
-                                autosize=False,
-                                width=1000,
-                                height=400,
-                                )
-                return fig
+            # Plotting the trajectories
+            fig = go.Figure()
+            fig.add_trace(go.Scattergl(x=original_x, y=original_y, mode='lines', name='Original Path'))
+            fig.add_trace(go.Scattergl(x=smoothed_x, y=smoothed_y, mode='lines', name='Smoothed Path'))
+            fig.update_layout(xaxis_title='x-coordinate', yaxis_title='y-coordinate', 
+                            xaxis=dict(
+                                tickmode='auto',
+                                tickformat=',',  # This will ensure that numbers are separated by commas but not in scientific notation
+                            ),
+                            yaxis=dict(
+                                tickmode='auto',
+                                tickformat=','
+                            ),
+                            margin={'l': 80, 'b': 140, 't': 50, 'r': 10},
+                            font=dict(
+                                family="Times New Roman",
+                                size=18,
+                                color= "black"
+                            ),
+                            autosize=False,
+                            width=1000,
+                            height=400,
+                            )
+            return fig
 
-        return go.Figure()  
+        return go.Figure()
 
     @app.callback(
         Output("download-pdf-traj", "data"),

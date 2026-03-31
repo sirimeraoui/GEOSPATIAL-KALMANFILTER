@@ -7,7 +7,7 @@
 CREATE EXTENSION IF NOT EXISTS MobilityDB CASCADE;
 
 --loading data (similar to CH5)
-DROP TABLE AISInput;
+DROP TABLE IF EXISTS AISInput;
 CREATE TABLE AISInput(
 T timestamp,
 TypeOfMobile varchar(50),
@@ -44,7 +44,7 @@ COPY AISInput(T, TypeOfMobile, MMSI, Latitude, Longitude, NavigationalStatus,
   ROT, SOG, COG, Heading, IMO, CallSign, Name, ShipType, CargoType, Width, Length,
   TypeOfPositionFixingDevice, Draught, Destination, ETA, DataSourceType,
   SizeA, SizeB, SizeC, SizeD)
-FROM :data_csv_path DELIMITER  ',' CSV HEADER;
+FROM :data_csv_path DELIMITER ',' CSV HEADER;
 
 -- Initial filtering and transformation:
 UPDATE AISInput

@@ -23,10 +23,10 @@ data_csv_path=os.path.abspath(data_csv_path)
 print(data_csv_path)
 #update this based on whether you're running your db from docker or local/ this is a docker version, otherwise comment it out
 container_csv_path = "/tmp/aisdk.csv"
-container_name = "mobilitydb_py"  # Your container name
+container_name = "mobilitydb"  # Your container name
 docker_cmd = f"docker cp {data_csv_path} {container_name}:{container_csv_path}"
 os.system(docker_cmd)
-data_csv_path= container_csv_path
+data_csv_path = container_csv_path
 print(data_csv_path)
 # Data collection and 9.3 Cleaning Static Attribute +9.4 Voyage related Attribbutes:
 try:
