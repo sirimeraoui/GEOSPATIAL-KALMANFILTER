@@ -18,7 +18,7 @@ database_url = (
 
 # Create the SQLAlchemy engine
 engine = create_engine(database_url)
-data_csv_path = get_csv_from_zip("data/aisdk-2026-03-25.zip")
+data_csv_path = get_csv_from_zip("data/aisdk-2024-03-01.zip")
 data_csv_path=os.path.abspath(data_csv_path)
 print(data_csv_path)
 #update this based on whether you're running your db from docker or local/ this is a docker version, otherwise comment it out

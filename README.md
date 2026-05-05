@@ -13,7 +13,8 @@
 
 in data folder get this specific AIS zip folder, aisdk-2026-03-25.zip from this link: http://aisdata.ais.dk/?prefix= 
 
-###############################################################How to run this once your env is setup?
+###############################################################
+#### How to run this once your env is setup?
 first run init.py to clean stati attributes and prepare the db
-then run cleanData.py for other cleaning including Kalman smoothinh, this will get the Dash app running , that's also the file where you find the Kalman function defined 
+then run app.py for other cleaning including Kalman filtering, this will get the Dash app running , that's also the file where you find the Kalman function defined 
 if you want to change the measurment and process noise values
