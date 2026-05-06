@@ -58,7 +58,8 @@ def create_dash_app(df, engine, perform_kalman_filtering, perform_vanilla_kalman
 
             # Call the Kalman filtering function
             smoothed_coords = perform_kalman_filtering(gdf)
-            smoothed_coords_vanilla = perform_vanilla_kalman_filtering(gdf)
+            smoothed_coords_vanilla , uncertainties_vanilla, kalman_gains_vanilla= perform_vanilla_kalman_filtering(gdf)
+            
             mean_smoothed_coords = mean_filtering(gdf)
             median_smoothed_coords = median_filtering(gdf)
             # Prepare data for plotting
@@ -69,6 +70,7 @@ def create_dash_app(df, engine, perform_kalman_filtering, perform_vanilla_kalman
             shiptypes = gdf['shiptype'].fillna('Unknown')
             cargotypes = gdf['cargotype'].fillna('Unknown')
             nav_status = gdf['navigationalstatus'].fillna('Unknown')
+            
 
             # Create hover text with ShipType and CargoType
             hover_text = [
@@ -109,15 +111,28 @@ def create_dash_app(df, engine, perform_kalman_filtering, perform_vanilla_kalman
                 line=dict(width=1, color='blue')
             ))
             
+            hover_matrix_text = []
+
+            for P, K in zip(uncertainties_vanilla, kalman_gains_vanilla):
+                text = (
+                    f"P (covariance):<br>{np.array2string(P, precision=2)}<br><br>"
+                    f"K (gain):<br>{np.array2string(K, precision=2)}"
+                )
+                hover_matrix_text.append(text)
             # Smoothed path
             if len(smoothed_x_vanilla) > 0:
-                fig.add_trace(go.Scattergl(
-                    x=smoothed_x_vanilla, 
-                    y=smoothed_y_vanilla, 
-                    mode='lines',
-                    name='Smoothed Path Vanilla',
-                    line=dict(width=2, color='green', dash='dash')
-                ))
+              fig.add_trace(go.Scattergl(
+                x=smoothed_x_vanilla,
+                y=smoothed_y_vanilla,
+                mode='lines',
+                name='Smoothed Path Vanilla',
+                text=hover_matrix_text,
+                hovertemplate=
+                    "x: %{x}<br>" +
+                    "y: %{y}<br>" +
+                    "%{text}<extra></extra>",
+                line=dict(width=2, color='green', dash='dash')
+            ))
             
             if len(smoothed_x) > 0:
                 fig.add_trace(go.Scattergl(
@@ -155,6 +170,7 @@ def create_dash_app(df, engine, perform_kalman_filtering, perform_vanilla_kalman
                 title=f"MMSI {selected_mmsi} | Ship: {ship_type} | Cargo: {cargo_type}",
                 xaxis_title='x-coordinate (meters)',
                 yaxis_title='y-coordinate (meters)', 
+            
                 xaxis=dict(
                     tickmode='auto',
                     tickformat=',',

@@ -122,7 +122,8 @@ def perform_vanilla_kalman_filtering(gdf):
     # 3. Filter loop
     # ============================================================================
     filtered = []
-    
+    uncertainties = []
+    kalman_gains = []
     for i, m in enumerate(measurements):
         z = np.array([m['x'], m['y']]).reshape(2, 1)
         
@@ -156,16 +157,17 @@ def perform_vanilla_kalman_filtering(gdf):
             S = H @ P_pred @ H.T + R
             #kalman gain K = uncertainty in prediction / total uncertainty is small K confident
             K = P_pred @ H.T @ np.linalg.inv(S)
-            
+            kalman_gains.append(K.copy())
+
             x_filt = x_pred + K @ y
             #uncerteinty 
             P = (np.eye(4) - K @ H) @ P_pred
         
         filtered.append(x_filt.copy())
         x = x_filt
-    
+        uncertainties.append(P.copy())
     # Return smoothed positions
-    return np.array([[s[0,0], s[2,0]] for s in filtered])
+    return np.array([[s[0,0], s[2,0]] for s in filtered]), np.array(uncertainties), np.array(kalman_gains)
 
 
 #  Kalman filtering code
@@ -180,7 +182,7 @@ def perform_kalman_filtering(gdf):
         noise_covar=np.diag([measurement_noise_std[0]**2, measurement_noise_std[1]**2])
     )
 
-    process_noise_std = [1, 1]  # Modify based on application needs
+    process_noise_std = [1, 5]  # Modify based on application needs
     transition_model = CombinedLinearGaussianTransitionModel([
         ConstantVelocity(process_noise_std[0]**2),
         ConstantVelocity(process_noise_std[1]**2)

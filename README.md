@@ -11,10 +11,10 @@
 - pip install -r req.txt if there is one
 
 
-in data folder get this specific AIS zip folder, aisdk-2026-03-25.zip from this link: http://aisdata.ais.dk/?prefix= 
+Add this dataset to the data folder: [aisdk-2026-03-25.zip from this link: http://aisdata.ais.dk/?prefix= ](https://docs.mobilitydb.com/pub/aisdk-2024-03-01.zip)
 
-###############################################################
+
 #### How to run this once your env is setup?
-first run init.py to clean stati attributes and prepare the db
-then run app.py for other cleaning including Kalman filtering, this will get the Dash app running , that's also the file where you find the Kalman function defined 
-if you want to change the measurment and process noise values
+1. first run init.py to clean static attributes and prepare the db (this will take a while)
+2. Run app.py for other cleaning including Kalman filtering, this will get the Dash app running , 
+3. Added the total uncertainties and kalman gain values to the plot of the vanilla kalman filter (green line)

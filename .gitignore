@@ -167,3 +167,4 @@ debug.md
 env
 *.csv
 *.zip
+start.sh
